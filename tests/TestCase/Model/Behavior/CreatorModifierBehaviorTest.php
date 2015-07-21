@@ -166,6 +166,8 @@ class CreatorModifierBehaviorTest extends TestCase {
 
 		$event = new Event('Model.beforeSave');
 		$entity = new Entity(['name' => 'Foo', 'modifier_id' => $existingValue]);
+		$entity->clean();
+		$entity->isNew(false);
 
 		$return = $this->Behavior->handleEvent($event, $entity);
 		$this->assertTrue($return, 'Handle Event is expected to always return true');
@@ -233,7 +235,7 @@ class CreatorModifierBehaviorTest extends TestCase {
 	 * @return void
 	 */
 	public function testCreatedOrModified() {
-		$entity = new Entity(['name' => 'Foo']);
+		$entity = new Entity(['name' => 'Foo', 'creator_id' => null]);
 		$return = $this->Behavior->createdOrModifed($entity);
 		$this->assertTrue(
 			$return,
@@ -260,6 +262,15 @@ class CreatorModifierBehaviorTest extends TestCase {
 				]
 			]
 		];
+
+		$this->Behavior = $this->getMock(
+			'\CreatorModifier\Model\Behavior\CreatorModifierBehavior',
+			['sessionUserId'],
+			[$table, $config]
+		);
+		$this->Behavior->expects($this->any())
+			->method('sessionUserId')
+			->will($this->returnValue($this->mockedUserUUID));
 
 		$entity = new Entity(['username' => 'timestamp test']);
 		$return = $this->Behavior->createdOrModifed($entity);
