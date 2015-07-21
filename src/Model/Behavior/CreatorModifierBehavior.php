@@ -72,9 +72,10 @@ class CreatorModifierBehavior extends Behavior {
 					sprintf('When should be one of "always", "new" or "existing". The passed value "%s" is invalid', $when)
 				);
 			}
-			if ($when === 'always' ||
-				($when === 'new' && $new) ||
-				($when === 'existing' && !$new)
+
+			if ($when === 'always'
+				|| ($when === 'new' && $new)
+				|| ($when === 'existing' && !$new)
 			) {
 				$this->updateField($entity, $field);
 			}
