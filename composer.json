@@ -1,0 +1,43 @@
+{
+  "name": "loadsys/cakephp-creatormodifier",
+  "description": "CakePHP 3.x Plugin To Add Creator and Modifier Automagic fields.",
+  "type": "cakephp-plugin",
+  "keywords": [
+    "cakephp",
+    "plugin",
+    "behavior"
+  ],
+  "homepage": "https://github.com/loadsys/CakePHP-CreatorModifier",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Justin Yost",
+      "email": "justin@loadsys.com",
+      "homepage": "https://www.yostivanich.com/",
+      "role": "Author"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/loadsys/CakePHP-CreatorModifier/issues",
+    "source": "https://github.com/loadsys/CakePHP-CreatorModifier"
+  },
+  "require": {
+    "php": ">=5.4.16",
+    "cakephp/cakephp": "~3.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.1",
+    "loadsys/loadsys_codesniffer": "~3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "CreatorModifier\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "CreatorModifier\\Test\\": "tests",
+      "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+    }
+  }
+}
