@@ -171,6 +171,7 @@ class CreatorModifierBehavior extends Behavior {
 			// this is not a valid logged in user, therefore we want to destroy the session
 			$request->session()->destroy();
 		}
+
 		return $userId;
 	}
 }
