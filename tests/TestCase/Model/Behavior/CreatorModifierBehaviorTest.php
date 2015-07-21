@@ -243,8 +243,8 @@ class CreatorModifierBehaviorTest extends TestCase {
 		);
 		$this->assertSame(
 			$this->mockedUserUUID,
-			$entity->creator_id,
-			'Creator ID was set as the mocked value.'
+			$entity->modifier_id,
+			'Modifier ID was set as the mocked value.'
 		);
 	}
 
