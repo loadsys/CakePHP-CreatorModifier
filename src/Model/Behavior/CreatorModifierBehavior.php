@@ -23,6 +23,7 @@ class CreatorModifierBehavior extends Behavior {
 	 *
 	 * @var array
 	 */
+	// @codingStandardsIgnoreStart
 	protected $_defaultConfig = [
 		'implementedFinders' => [],
 		'implementedMethods' => [
@@ -37,6 +38,7 @@ class CreatorModifierBehavior extends Behavior {
 		],
 		'sessionUserIdKey' => 'Auth.User.id',
 	];
+	// @codingStandardsIgnoreEnd
 
 	/**
 	 * If events are specified - do *not* merge them with existing events,
