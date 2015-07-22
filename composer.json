@@ -1,11 +1,14 @@
 {
   "name": "loadsys/cakephp-creatormodifier",
-  "description": "CakePHP 3.x Plugin To Add Creator and Modifier Automagic fields.",
+  "description": "CakePHP 3.x Plugin to set Creator and Modifier automagic fields during save.",
   "type": "cakephp-plugin",
   "keywords": [
     "cakephp",
     "plugin",
-    "behavior"
+    "behavior",
+    "user",
+    "creator",
+    "modifier"
   ],
   "homepage": "https://github.com/loadsys/CakePHP-CreatorModifier",
   "license": "MIT",
