@@ -20,7 +20,7 @@ Sets a `creator_id` and `modifier_id` on records during save using the logged in
 ### Composer
 
 ````bash
-$ composer require loadsys/loadsys/cakephp-creatormodifier:~1.0
+$ composer require loadsys/cakephp-creatormodifier:~1.0
 ````
 
 
