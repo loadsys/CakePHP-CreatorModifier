@@ -38,7 +38,7 @@ define('CAKE', CORE_PATH . 'src' . DS);
 require ROOT . '/vendor/autoload.php';
 require CORE_PATH . 'config/bootstrap.php';
 
-Cake\Core\Configure::write('App', ['namespace' => 'Crud\Test\App']);
+Cake\Core\Configure::write('App', ['namespace' => 'CreatorModifier']);
 Cake\Core\Configure::write('debug', true);
 
 $TMP = new \Cake\Filesystem\Folder(TMP);
@@ -52,14 +52,14 @@ $cache = [
 	],
 	'_cake_core_' => [
 		'className' => 'File',
-		'prefix' => 'crud_myapp_cake_core_',
+		'prefix' => 'creatormodifier_cake_core_',
 		'path' => CACHE . 'persistent/',
 		'serialize' => true,
 		'duration' => '+10 seconds'
 	],
 	'_cake_model_' => [
 		'className' => 'File',
-		'prefix' => 'crud_my_app_cake_model_',
+		'prefix' => 'creatormodifier_cake_model_',
 		'path' => CACHE . 'models/',
 		'serialize' => 'File',
 		'duration' => '+10 seconds'
@@ -70,8 +70,6 @@ Cake\Cache\Cache::config($cache);
 Cake\Core\Configure::write('Session', [
 	'defaults' => 'php'
 ]);
-
-Cake\Core\Plugin::load('Crud', ['path' => ROOT . DS, 'autoload' => true]);
 
 Cake\Routing\DispatcherFactory::add('Routing');
 Cake\Routing\DispatcherFactory::add('ControllerFactory');
