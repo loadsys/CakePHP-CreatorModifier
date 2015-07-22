@@ -1,13 +1,7 @@
-CakePHP 3
-
 /vendor/*
 /config/app.php
 /tmp/*
 /logs/*
 
-CakePHP 2
-
-/app/tmp/*
-/app/Config/core.php
-/app/Config/database.php
-/vendors/*
+# Ignore the composer lock file-- it should never be included in a distributed package.
+/composer.lock
