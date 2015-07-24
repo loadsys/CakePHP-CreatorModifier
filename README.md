@@ -2,7 +2,7 @@
 
 [![Latest Version](https://img.shields.io/github/release/loadsys/CakePHP-CreatorModifier.svg?style=flat-square)](https://github.com/loadsys/CakePHP-CreatorModifier/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://travis-ci.org/loadsys/CakePHP-CreatorModifier.svg?branch=master&style=flat-square)](https://travis-ci.org/loadsys/CakePHP-SocialLinks)
+[![Build Status](https://travis-ci.org/loadsys/CakePHP-CreatorModifier.svg?branch=master&style=flat-square)](https://travis-ci.org/loadsys/CakePHP-CreatorModifier)
 [![Coverage Status](https://coveralls.io/repos/loadsys/CakePHP-CreatorModifier/badge.svg)](https://coveralls.io/r/loadsys/CakePHP-CreatorModifier)
 [![Total Downloads](https://img.shields.io/packagist/dt/loadsys/cakephp-creatormodifier.svg?style=flat-square)](https://packagist.org/packages/loadsys/cakephp-creatormodifier)
 
