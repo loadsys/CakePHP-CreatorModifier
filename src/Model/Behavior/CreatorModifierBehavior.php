@@ -163,13 +163,10 @@ class CreatorModifierBehavior extends Behavior {
 	 */
 	protected function sessionUserId() {
 		$userId = null;
-
 		$request = $this->newRequest();
-		$userId = $request->session()->read($this->_config['sessionUserIdKey']);
 
-		if (!$userId) {
-			// this is not a valid logged in user, therefore we want to destroy the session
-			$request->session()->destroy();
+		if ($request->session()->started()) {
+			$userId = $request->session()->read($this->_config['sessionUserIdKey']);
 		}
 
 		return $userId;
