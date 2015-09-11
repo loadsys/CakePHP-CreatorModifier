@@ -40,7 +40,10 @@ before_script:
 
 script:
   - vendor/bin/phpcs -p --extensions=php --standard=Loadsys ./src ./tests ./config
-  - vendor/bin/phpunit
+  - vendor/bin/phpunit -v --coverage-clover=build/logs/clover.xml
+
+after_success:
+  - php vendor/bin/coveralls -v
 
 notifications:
   email: false
