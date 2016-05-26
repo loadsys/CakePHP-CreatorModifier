@@ -23,6 +23,17 @@ Sets a `creator_id` and `modifier_id` on records during save using the logged in
 $ composer require loadsys/cakephp-creatormodifier:~1.0
 ````
 
+In your `config/bootstrap.php` file, add:
+
+```php
+Plugin::load('CreatorModifier', ['bootstrap' => false, 'routes' => false]);
+```
+
+OR
+
+```php
+bin/cake plugin load CreatorModifier
+```
 
 ## Usage
 
