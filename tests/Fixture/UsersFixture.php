@@ -26,7 +26,7 @@ class UsersFixture extends TestFixture {
 		],
 		'_options' => [
 			'engine' => 'InnoDB',
-			'collation' => 'utf8_general_ci'
+			'collation' => 'utf8_general_ci',
 		],
 	];
 	// @codingStandardsIgnoreEnd
@@ -43,7 +43,7 @@ class UsersFixture extends TestFixture {
 			'created' => '2014-09-02 16:45:55',
 			'creator_id' => '799763fd-32bc-11e4-9e39-080027506c76',
 			'modified' => '2014-09-02 16:45:55',
-			'modifier_id' => '799763fd-32bc-11e4-9e39-080027506c76'
+			'modifier_id' => '799763fd-32bc-11e4-9e39-080027506c76',
 		],
 		[
 			'id' => '799763fd-32bc-11e4-9e39-080027506c76',
@@ -51,7 +51,7 @@ class UsersFixture extends TestFixture {
 			'created' => '2014-09-02 16:45:55',
 			'creator_id' => '799763fd-32bc-11e4-9e39-080027506c76',
 			'modified' => '2014-09-02 16:45:55',
-			'modifier_id' => '799763fd-32bc-11e4-9e39-080027506c76'
+			'modifier_id' => '799763fd-32bc-11e4-9e39-080027506c76',
 		],
 		[
 			'id' => '74708ed9-33b1-11e4-9e39-080027506c76',
@@ -59,7 +59,7 @@ class UsersFixture extends TestFixture {
 			'created' => '2014-09-02 16:45:55',
 			'creator_id' => '799763fd-32bc-11e4-9e39-080027506c76',
 			'modified' => '2014-09-02 16:45:55',
-			'modifier_id' => '799763fd-32bc-11e4-9e39-080027506c76'
+			'modifier_id' => '799763fd-32bc-11e4-9e39-080027506c76',
 		],
 	];
 }

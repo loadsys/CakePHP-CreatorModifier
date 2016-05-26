@@ -53,7 +53,7 @@ class CreatorModifierBehaviorTest extends TestCase {
 	 */
 	public function testImplementedEventsDefault() {
 		$expected = [
-			'Model.beforeSave' => 'handleEvent'
+			'Model.beforeSave' => 'handleEvent',
 		];
 		$this->assertEquals($expected, $this->Behavior->implementedEvents());
 	}
@@ -69,7 +69,7 @@ class CreatorModifierBehaviorTest extends TestCase {
 		$this->Behavior = new CreatorModifierBehavior($table, $settings);
 
 		$expected = [
-			'Something.special' => 'handleEvent'
+			'Something.special' => 'handleEvent',
 		];
 		$this->assertEquals($expected, $this->Behavior->implementedEvents());
 	}
@@ -259,8 +259,8 @@ class CreatorModifierBehaviorTest extends TestCase {
 			'events' => [
 				'Model.beforeSave' => [
 					'created' => 'new',
-				]
-			]
+				],
+			],
 		];
 
 		$this->Behavior = $this->getMock(

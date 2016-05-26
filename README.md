@@ -23,6 +23,17 @@ Sets a `creator_id` and `modifier_id` on records during save using the logged in
 $ composer require loadsys/cakephp-creatormodifier:~1.0
 ````
 
+In your `config/bootstrap.php` file, add:
+
+```php
+Plugin::load('CreatorModifier', ['bootstrap' => false, 'routes' => false]);
+```
+
+OR
+
+```php
+bin/cake plugin load CreatorModifier
+```
 
 ## Usage
 
@@ -56,6 +67,10 @@ $this->addBehavior('CreatorModifier.CreatorModifier', [
 
 ## Contributing
 
+### Code of Conduct
+
+This project has adopted the Contributor Covenant as its [code of conduct](CODE_OF_CONDUCT.md). All contributors are expected to adhere to this code. [Translations are available](http://contributor-covenant.org/).
+
 ### Reporting Issues
 
 Please use [GitHub Isuses](https://github.com/loadsys/CakePHP-CreatorModifier/issues) for listing any known defects or issues.
@@ -64,6 +79,23 @@ Please use [GitHub Isuses](https://github.com/loadsys/CakePHP-CreatorModifier/is
 
 When developing this plugin, please fork and issue a PR for any new development.
 
+Set up a working copy:
+```shell
+$ git clone git@github.com:YOUR_USERNAME/CakePHP-CreatorModifier.git
+$ cd CakePHP-CreatorModifier/
+$ composer install
+$ vendor/bin/phpcs --config-set installed_paths vendor/loadsys/loadsys_codesniffer,vendor/cakephp/cakephp-codesniffer
+```
+
+Make your changes:
+```shell
+$ git checkout -b your-topic-branch
+# (Make your changes. Write some tests.)
+$ vendor/bin/phpunit
+$ vendor/bin/phpcs -p --extensions=php --standard=Loadsys ./src ./tests
+```
+
+Then commit and push your changes to your fork, and open a pull request.
 
 ## License
 
@@ -72,4 +104,4 @@ When developing this plugin, please fork and issue a PR for any new development.
 
 ## Copyright
 
-[Loadsys Web Strategies](http://www.loadsys.com) 2015
+[Loadsys Web Strategies](http://www.loadsys.com) 2016
