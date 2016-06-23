@@ -9,6 +9,7 @@ use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use CreatorModifier\Model\Behavior\CreatorModifierBehavior;
+use \RuntimeException;
 
 /**
  * \CreatorModifier\Test\TestCase\Model\Behavior\TestCreatorModifierBehavior
@@ -30,6 +31,8 @@ class TestCreatorModifierBehavior extends CreatorModifierBehavior {
  * \CreatorModifier\Test\TestCase\Model\Behavior\CreatorModifierBehaviorTest
  *
  * Tests for the CreatorModifierBehavior class.
+ *
+ * @coversDefaultClass \CreatorModifier\Model\Behavior\CreatorModifierBehavior
  */
 class CreatorModifierBehaviorTest extends TestCase {
 	/**
@@ -235,7 +238,7 @@ class CreatorModifierBehaviorTest extends TestCase {
 	/**
 	 * Test that getUserId persists and returns the same value for multiple calls.
 	 *
-	 * @depends testGetTimestamp
+	 * @depends testGetUserId
 	 * @return void
 	 */
 	public function testGetUserIdPersists($behavior) {
@@ -423,7 +426,7 @@ class CreatorModifierBehaviorTest extends TestCase {
 			->with($field, $this->mockedUserUUID)
 			->will($this->returnValue(true));
 
-		$table = $this->getMock('Cake\ORM\Table');
+		$table = $this->getMock('\Cake\ORM\Table');
 		$behavior = $this->getMock(
 			'\CreatorModifier\Test\TestCase\Model\Behavior\TestCreatorModifierBehavior',
 			['getUserId'],
@@ -437,6 +440,152 @@ class CreatorModifierBehaviorTest extends TestCase {
 		$this->assertNull(
 			$return,
 			'When attempting to update a field marked clean, ::updateField returns null and sets the return from ::getUserId to the field for the Entity.'
+		);
+	}
+
+	/**
+	 * Test ::sessionUserId when the session exists, is started and returns a value.
+	 *
+	 * @return void
+	 */
+	public function testSessionUserIdSessionExists() {
+		$request = $this->getMock(
+			'\Cake\Network\Request',
+			['session', 'started', 'read']
+		);
+		$request->expects($this->any())
+			->method('session')
+			->with()
+			->will($this->returnSelf());
+		$request->expects($this->once())
+			->method('started')
+			->with()
+			->will($this->returnValue(true));
+		$request->expects($this->once())
+			->method('read')
+			->with('Auth.User.id')
+			->will($this->returnValue($this->mockedUserUUID));
+
+		$table = $this->getMock('\Cake\ORM\Table');
+
+		$behavior = $this->getMock(
+			'\CreatorModifier\Test\TestCase\Model\Behavior\TestCreatorModifierBehavior',
+			['newRequest'],
+			[$table]
+		);
+		$behavior->expects($this->once())
+			->method('newRequest')
+			->with()
+			->will($this->returnValue($request));
+
+		$output = $behavior->sessionUserId();
+		$this->assertEquals(
+			$this->mockedUserUUID,
+			$output,
+			'On the session being started and returns a mocked value, that mocked value should be returned.'
+		);
+	}
+
+	/**
+	 * Test ::sessionUserId when the session is not started.
+	 *
+	 * @return void
+	 */
+	public function testSessionUserIdSessionNotStarted() {
+		$request = $this->getMock(
+			'\Cake\Network\Request',
+			['session', 'started', 'read', 'start']
+		);
+		$request->expects($this->any())
+			->method('session')
+			->with()
+			->will($this->returnSelf());
+		$request->expects($this->once())
+			->method('started')
+			->with()
+			->will($this->returnValue(false));
+		$request->expects($this->once())
+			->method('start')
+			->with()
+			->will($this->returnValue(true));
+		$request->expects($this->once())
+			->method('read')
+			->with('Auth.User.id')
+			->will($this->returnValue($this->mockedUserUUID));
+
+		$table = $this->getMock('\Cake\ORM\Table');
+
+		$behavior = $this->getMock(
+			'\CreatorModifier\Test\TestCase\Model\Behavior\TestCreatorModifierBehavior',
+			['newRequest', 'log'],
+			[$table]
+		);
+		$behavior->expects($this->once())
+			->method('newRequest')
+			->with()
+			->will($this->returnValue($request));
+		$behavior->expects($this->once())
+			->method('log')
+			->with($this->anything(), 'debug')
+			->will($this->returnValue(true));
+
+		$output = $behavior->sessionUserId();
+		$this->assertEquals(
+			$this->mockedUserUUID,
+			$output,
+			'On the session not being already started and then manually started and returns a mocked value, that mocked value should be returned.'
+		);
+	}
+
+	/**
+	 * Test ::sessionUserId when the session is not started.
+	 *
+	 * @return void
+	 */
+	public function testSessionUserIdSessionNotStartedStartingThrowsException() {
+		$exception = new RuntimeException();
+
+		$request = $this->getMock(
+			'\Cake\Network\Request',
+			['session', 'started', 'read', 'start']
+		);
+		$request->expects($this->any())
+			->method('session')
+			->with()
+			->will($this->returnSelf());
+		$request->expects($this->once())
+			->method('started')
+			->with()
+			->will($this->returnValue(false));
+		$request->expects($this->once())
+			->method('start')
+			->with()
+			->will($this->throwException($exception));
+		$request->expects($this->never())
+			->method('read')
+			->with('Auth.User.id')
+			->will($this->returnValue($this->mockedUserUUID));
+
+		$table = $this->getMock('\Cake\ORM\Table');
+
+		$behavior = $this->getMock(
+			'\CreatorModifier\Test\TestCase\Model\Behavior\TestCreatorModifierBehavior',
+			['newRequest', 'log'],
+			[$table]
+		);
+		$behavior->expects($this->once())
+			->method('newRequest')
+			->with()
+			->will($this->returnValue($request));
+		$behavior->expects($this->once())
+			->method('log')
+			->with($this->anything(), 'debug')
+			->will($this->returnValue(true));
+
+		$output = $behavior->sessionUserId();
+		$this->assertNull(
+			$output,
+			'On the session not being started, a `null` value should be returned.'
 		);
 	}
 }

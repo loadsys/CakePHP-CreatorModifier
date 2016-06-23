@@ -10,6 +10,7 @@ use Cake\Log\LogTrait;
 use Cake\Network\Request;
 use Cake\ORM\Behavior;
 use Cake\ORM\Entity;
+use \RuntimeException;
 use \UnexpectedValueException;
 
 /**
@@ -160,16 +161,6 @@ class CreatorModifierBehavior extends Behavior {
 	}
 
 	/**
-	 * Factory method for the Request object.
-	 *
-	 * @return \Cake\Network\Request New instance of the Request object.
-	 * @codeCoverageIgnore Don't test PHP's ability to use new.
-	 */
-	protected function newRequest() {
-		return new Request();
-	}
-
-	/**
 	 * Return the User.id grabbed from the Session information.
 	 *
 	 * @return string The string representing the current logged in user.
@@ -181,9 +172,24 @@ class CreatorModifierBehavior extends Behavior {
 		if ($request->session()->started()) {
 			$userId = $request->session()->read($this->_config['sessionUserIdKey']);
 		} else {
-			$this->log('The Session is not started. This typically means a User is not logged in. In this case there is no Session value for the currently active User and therefore we will set the `creator_id` and `modifier_id` to a null value.', 'debug');
+			$this->log('The Session is not started. This typically means a User is not logged in. In this case there is no Session value for the currently active User and therefore we will set the `creator_id` and `modifier_id` to a null value. As a fallback, we are manually starting the session and reading the `$this->_config[sessionUserIdKey]` value, which is probably not correct.', 'debug');
+			try {
+				$request->session()->start();
+				$userId = $request->session()->read($this->_config['sessionUserIdKey']);
+			} catch (RuntimeException $e) {
+			}
 		}
 
 		return $userId;
+	}
+
+	/**
+	 * Factory method for the Request object.
+	 *
+	 * @return \Cake\Network\Request New instance of the Request object.
+	 * @codeCoverageIgnore Don't test PHP's ability to use new.
+	 */
+	protected function newRequest() {
+		return new Request();
 	}
 }
