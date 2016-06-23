@@ -6,6 +6,7 @@
 namespace CreatorModifier\Model\Behavior;
 
 use Cake\Event\Event;
+use Cake\Log\LogTrait;
 use Cake\Network\Request;
 use Cake\ORM\Behavior;
 use Cake\ORM\Entity;
@@ -18,6 +19,10 @@ use \UnexpectedValueException;
  * value to assign to the creator_id and modifier_id on saving an Entity.
  */
 class CreatorModifierBehavior extends Behavior {
+
+	// Add logging in the event of a failure with the session.
+	use LogTrait;
+
 	/**
 	 * These are merged with user-provided config when the behavior is used.
 	 *
@@ -174,6 +179,8 @@ class CreatorModifierBehavior extends Behavior {
 
 		if ($request->session()->started()) {
 			$userId = $request->session()->read($this->_config['sessionUserIdKey']);
+		} else {
+			$this->log('The Session is not started. This typically means a User is not logged in. In this case there is no Session value for the currently active User and therefore we will set the `creator_id` and `modifier_id` to a null value.', 'debug');
 		}
 
 		return $userId;
