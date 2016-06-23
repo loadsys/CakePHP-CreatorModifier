@@ -1,16 +1,23 @@
 <?php
+/**
+ * CreatorModifierBehavior is a tool to set a `creator_id` and `modifier_id`
+ * on records being saved.
+ */
 namespace CreatorModifier\Model\Behavior;
 
 use Cake\Event\Event;
+use Cake\Network\Request;
 use Cake\ORM\Behavior;
 use Cake\ORM\Entity;
+use \UnexpectedValueException;
 
 /**
- * CreatorModifierBehavior - Adds the ability to use the Session provided User.primary_key
+ * \CreatorModifier\Model\Behavior\CreatorModifierBehavior
+ *
+ * Adds the ability to use the Session provided User.primary_key
  * value to assign to the creator_id and modifier_id on saving an Entity.
  */
 class CreatorModifierBehavior extends Behavior {
-
 	/**
 	 * These are merged with user-provided config when the behavior is used.
 	 *
@@ -70,7 +77,7 @@ class CreatorModifierBehavior extends Behavior {
 
 		foreach ($events[$eventName] as $field => $when) {
 			if (!in_array($when, ['always', 'new', 'existing'])) {
-				throw new \UnexpectedValueException(
+				throw new UnexpectedValueException(
 					sprintf('When should be one of "always", "new" or "existing". The passed value "%s" is invalid', $when)
 				);
 			}
@@ -153,7 +160,7 @@ class CreatorModifierBehavior extends Behavior {
 	 * @return \Cake\Network\Request New instance of the Request object.
 	 */
 	protected function newRequest() {
-		return new \Cake\Network\Request();
+		return new Request();
 	}
 
 	/**
