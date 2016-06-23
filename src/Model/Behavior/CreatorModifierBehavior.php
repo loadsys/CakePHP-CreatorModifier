@@ -163,6 +163,7 @@ class CreatorModifierBehavior extends Behavior {
 	 * Factory method for the Request object.
 	 *
 	 * @return \Cake\Network\Request New instance of the Request object.
+	 * @codeCoverageIgnore Don't test PHP's ability to use new.
 	 */
 	protected function newRequest() {
 		return new Request();

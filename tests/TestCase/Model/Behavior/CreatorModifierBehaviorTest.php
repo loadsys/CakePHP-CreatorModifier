@@ -1,4 +1,7 @@
 <?php
+/**
+ * Tests for the CreatorModifierBehavior Class.
+ */
 namespace CreatorModifier\Test\TestCase\Model\Behavior;
 
 use Cake\Event\Event;
@@ -8,10 +11,27 @@ use Cake\TestSuite\TestCase;
 use CreatorModifier\Model\Behavior\CreatorModifierBehavior;
 
 /**
- * CreatorModifierBehaviorTest Class
+ * \CreatorModifier\Test\TestCase\Model\Behavior\TestCreatorModifierBehavior
+ *
+ * Expose the protected methods for the CreatorModifierBehavior class for unit
+ * testing.
+ */
+class TestCreatorModifierBehavior extends CreatorModifierBehavior {
+	public function updateField(Entity $entity, $field) {
+		return parent::updateField($entity, $field);
+	}
+
+	public function sessionUserId() {
+		return parent::sessionUserId();
+	}
+}
+
+/**
+ * \CreatorModifier\Test\TestCase\Model\Behavior\CreatorModifierBehaviorTest
+ *
+ * Tests for the CreatorModifierBehavior class.
  */
 class CreatorModifierBehaviorTest extends TestCase {
-
 	/**
 	 * Mocked User UUID Value
 	 *
@@ -24,9 +44,7 @@ class CreatorModifierBehaviorTest extends TestCase {
 	 *
 	 * @var array
 	 */
-	public $fixtures = [
-		//'CreatorModifier.users'
-	];
+	public $fixtures = [];
 
 	/**
 	 * Setup the Tests
@@ -136,7 +154,8 @@ class CreatorModifierBehaviorTest extends TestCase {
 	}
 
 	/**
-	 * Test when the modifier id is absent
+	 * Test what happens when everything works and a modifier_id value for the
+	 * Entity is not yet set.
 	 *
 	 * @return void
 	 * @triggers Model.beforeSave
@@ -156,7 +175,8 @@ class CreatorModifierBehaviorTest extends TestCase {
 	}
 
 	/**
-	 * testModifiedPresent
+	 * Test what happens when everything works and a modifier_id value for the
+	 * Entity is already set.
 	 *
 	 * @return void
 	 * @triggers Model.beforeSave
@@ -180,7 +200,7 @@ class CreatorModifierBehaviorTest extends TestCase {
 	}
 
 	/**
-	 * testInvalidEventConfig
+	 * Test what happens when we setup invalid configuration for an Event.
 	 *
 	 * @expectedException \UnexpectedValueException
 	 * @expectedExceptionMessage When should be one of "always", "new" or "existing". The passed value "fat fingers" is invalid
@@ -198,7 +218,7 @@ class CreatorModifierBehaviorTest extends TestCase {
 	}
 
 	/**
-	 * testGetTimestamp
+	 * Test the method ::getUserId, should return our mocked return.
 	 *
 	 * @return void
 	 */
@@ -213,7 +233,7 @@ class CreatorModifierBehaviorTest extends TestCase {
 	}
 
 	/**
-	 * test that get user id persists
+	 * Test that getUserId persists and returns the same value for multiple calls.
 	 *
 	 * @depends testGetTimestamp
 	 * @return void
@@ -230,7 +250,7 @@ class CreatorModifierBehaviorTest extends TestCase {
 	}
 
 	/**
-	 * testCreatedOrModified
+	 * Test the Behavior in the event everything works normally.
 	 *
 	 * @return void
 	 */
@@ -249,7 +269,38 @@ class CreatorModifierBehaviorTest extends TestCase {
 	}
 
 	/**
-	 * testTouchNoop
+	 * Test the Behavior when an event is fired that doesn't have any data set
+	 * for it from the configs.
+	 *
+	 * @return void
+	 */
+	public function testCreatedOrModifiedEmptyEvent() {
+		$table = $this->getMock('Cake\ORM\Table');
+		$config = [
+			'events' => [
+				'Model.beforeSave' => [],
+			],
+		];
+
+		$this->Behavior = $this->getMock(
+			'\CreatorModifier\Model\Behavior\CreatorModifierBehavior',
+			['sessionUserId'],
+			[$table, $config]
+		);
+		$this->Behavior->expects($this->any())
+			->method('sessionUserId')
+			->will($this->returnValue($this->mockedUserUUID));
+
+		$entity = new Entity(['username' => 'timestamp test']);
+		$return = $this->Behavior->createdOrModifed($entity);
+		$this->assertFalse($return, 'createdOrModifed is expected to do nothing and return false');
+		$this->assertNull($entity->modifier_id, 'modifier_id field is NOT expected to change');
+		$this->assertNull($entity->creator_id, 'creator_id field is NOT expected to change');
+	}
+
+	/**
+	 * Test the CreatedModifiedBehavior in the event that nothing is expected to
+	 * happen.
 	 *
 	 * @return void
 	 */
@@ -280,7 +331,7 @@ class CreatorModifierBehaviorTest extends TestCase {
 	}
 
 	/**
-	 * testTouchCustomEvent
+	 * Test handling a custom fired event.
 	 *
 	 * @return void
 	 */
@@ -312,6 +363,80 @@ class CreatorModifierBehaviorTest extends TestCase {
 		$this->assertNull(
 			$entity->creator_id,
 			'Creator_id field is NOT expected to change'
+		);
+	}
+
+	/**
+	 * Test the ::updateField method when the field is marked as dirty.
+	 *
+	 * @return void
+	 */
+	public function testUpdateFieldIsDirty() {
+		$existingValue = '54108b70-a178-4590-9df4-1a900a00020f';
+		$field = 'modifier_id';
+		$entity = $this->getMock(
+			'\Cake\ORM\Entity',
+			['dirty'],
+			[['name' => 'Foo', $field => $existingValue]]
+		);
+		$entity->expects($this->once())
+			->method('dirty')
+			->with($field)
+			->will($this->returnValue(true));
+
+		$table = $this->getMock('Cake\ORM\Table');
+		$behavior = $this->getMock(
+			'\CreatorModifier\Test\TestCase\Model\Behavior\TestCreatorModifierBehavior',
+			['getUserId'],
+			[$table]
+		);
+		$behavior->expects($this->never())
+			->method('getUserId')
+			->will($this->returnValue($this->mockedUserUUID));
+
+		$return = $behavior->updateField($entity, 'modifier_id');
+		$this->assertNull(
+			$return,
+			'When attempting to update a field marked already dirty, ::updateField returns null and does nothing.'
+		);
+	}
+
+	/**
+	 * Test the ::updateField method when the field is marked as dirty.
+	 *
+	 * @return void
+	 */
+	public function testUpdateFieldIsClean() {
+		$existingValue = '54108b70-a178-4590-9df4-1a900a00020f';
+		$field = 'modifier_id';
+		$entity = $this->getMock(
+			'\Cake\ORM\Entity',
+			['dirty', 'set'],
+			[['name' => 'Foo', $field => $existingValue]]
+		);
+		$entity->expects($this->once())
+			->method('dirty')
+			->with($field)
+			->will($this->returnValue(false));
+		$entity->expects($this->once())
+			->method('set')
+			->with($field, $this->mockedUserUUID)
+			->will($this->returnValue(true));
+
+		$table = $this->getMock('Cake\ORM\Table');
+		$behavior = $this->getMock(
+			'\CreatorModifier\Test\TestCase\Model\Behavior\TestCreatorModifierBehavior',
+			['getUserId'],
+			[$table]
+		);
+		$behavior->expects($this->once())
+			->method('getUserId')
+			->will($this->returnValue($this->mockedUserUUID));
+
+		$return = $behavior->updateField($entity, 'modifier_id');
+		$this->assertNull(
+			$return,
+			'When attempting to update a field marked clean, ::updateField returns null and sets the return from ::getUserId to the field for the Entity.'
 		);
 	}
 }
