@@ -62,7 +62,7 @@ class CreatorModifierBehavior extends Behavior {
 	 */
 	public function initialize(array $config) {
 		if (isset($config['events'])) {
-			$this->config('events', $config['events'], false);
+			$this->setConfig('events', $config['events'], false);
 		}
 	}
 
@@ -76,7 +76,7 @@ class CreatorModifierBehavior extends Behavior {
 	 * @throws \UnexpectedValueException When the value for an event is not 'always', 'new' or 'existing'
 	 */
 	public function handleEvent(Event $event, Entity $entity) {
-		$eventName = $event->name();
+		$eventName = $event->getName();
 		$events = $this->_config['events'];
 
 		$new = $entity->isNew() !== false;
@@ -137,7 +137,7 @@ class CreatorModifierBehavior extends Behavior {
 		foreach ($events[$eventName] as $field => $when) {
 			if (in_array($when, ['always', 'existing'])) {
 				$return = true;
-				$entity->dirty($field, false);
+				$entity->setDirty($field, false);
 				$this->updateField($entity, $field);
 			}
 		}
@@ -153,7 +153,7 @@ class CreatorModifierBehavior extends Behavior {
 	 * @return void
 	 */
 	protected function updateField(Entity $entity, $field) {
-		if ($entity->dirty($field)) {
+		if ($entity->isDirty($field)) {
 			return;
 		}
 
@@ -169,13 +169,13 @@ class CreatorModifierBehavior extends Behavior {
 		$userId = null;
 		$request = $this->newRequest();
 
-		if ($request->session()->started()) {
-			$userId = $request->session()->read($this->_config['sessionUserIdKey']);
+		if ($request->getSession()->started()) {
+			$userId = $request->getSession()->read($this->_config['sessionUserIdKey']);
 		} else {
 			$this->log('The Session is not started. This typically means a User is not logged in. In this case there is no Session value for the currently active User and therefore we will set the `creator_id` and `modifier_id` to a null value. As a fallback, we are manually starting the session and reading the `$this->_config[sessionUserIdKey]` value, which is probably not correct.', 'debug');
 			try {
-				$request->session()->start();
-				$userId = $request->session()->read($this->_config['sessionUserIdKey']);
+				$request->getSession()->start();
+				$userId = $request->getSession()->read($this->_config['sessionUserIdKey']);
 			} catch (RuntimeException $e) {
 			}
 		}
