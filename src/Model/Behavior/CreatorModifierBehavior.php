@@ -116,6 +116,7 @@ class CreatorModifierBehavior extends Behavior {
 	 */
 	public function getUserId() {
 		$userId = $this->sessionUserId();
+
 		return $userId;
 	}
 
